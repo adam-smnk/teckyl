@@ -84,7 +84,7 @@ void dumpMLIR(const std::map<std::string, lang::Def> &tcs) {
     module.push_back(f);
   }
 
-  module.dump();
+  module.print(llvm::outs());
 
   if (mlir::failed(mlir::verify(module)))
     llvm_unreachable("Module verification error");
