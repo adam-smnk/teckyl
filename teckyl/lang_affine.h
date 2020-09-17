@@ -118,6 +118,8 @@ bool hasNonAffineIndexing(const lang::TreeRef &e,
 
     return false;
   }
+  case lang::TK_MAX:
+  case lang::TK_MIN:
   case '+':
   case '-':
   case '*':

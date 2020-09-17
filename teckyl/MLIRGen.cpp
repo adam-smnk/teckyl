@@ -464,6 +464,28 @@ public:
     return buildIndexLoadExpr(a.name(), a.arguments());
   }
 
+  // Translates a TC access expression into an MLIR max computation.
+  virtual mlir::SelectOp buildMaxExpr(const lang::TreeRef &t) {
+    mlir::FileLineColLoc location = loc(t->range());
+    mlir::Value lhs = buildExpr(t->trees().at(0));
+    mlir::Value rhs = buildExpr(t->trees().at(1));
+
+    mlir::Value cond = builder.create<mlir::CmpIOp>(
+        location, mlir::CmpIPredicate::sgt, lhs, rhs);
+    return builder.create<mlir::SelectOp>(location, cond, lhs, rhs);
+  }
+
+  // Translates a TC access expression into an MLIR min computation.
+  virtual mlir::SelectOp buildMinExpr(const lang::TreeRef &t) {
+    mlir::FileLineColLoc location = loc(t->range());
+    mlir::Value lhs = buildExpr(t->trees().at(0));
+    mlir::Value rhs = buildExpr(t->trees().at(1));
+
+    mlir::Value cond = builder.create<mlir::CmpIOp>(
+        location, mlir::CmpIPredicate::slt, lhs, rhs);
+    return builder.create<mlir::SelectOp>(location, cond, lhs, rhs);
+  }
+
   // Builds an MLIR store operation writing the value `valueToStore`
   // to the tensor corresponds to `ident` indexed using the symbols
   // corresponding to the identifiers from `indices`.
@@ -517,6 +539,10 @@ public:
       return buildIdent(lang::Ident(t));
     case lang::TK_ACCESS:
       return buildIndexLoadExpr(lang::Access(t));
+    case lang::TK_MAX:
+      return buildMaxExpr(t);
+    case lang::TK_MIN:
+      return buildMinExpr(t);
     default:
       std::stringstream ss;
       ss << "Unknown tree type: '" << (int)t->kind() << "'";
