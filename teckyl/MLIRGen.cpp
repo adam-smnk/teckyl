@@ -78,7 +78,7 @@ static inline unsigned int getMLIRIntTypeBits(mlir::Type &t) {
 
 static inline bool isMLIRIntType(mlir::Type &t) {
   return t.isInteger(8) || t.isInteger(16) || t.isInteger(32) ||
-         t.isInteger(64);
+         t.isInteger(64) || t.isIndex();
 }
 
 using IteratorBoundsMap =
@@ -486,6 +486,21 @@ public:
     return builder.create<mlir::SelectOp>(location, cond, lhs, rhs);
   }
 
+  // Translates a TC cast expression into an MLIR operation.
+  // TODO: incomplete implementation
+  virtual mlir::Value buildCastExpr(const lang::TreeRef &t) {
+    mlir::FileLineColLoc location = loc(t->range());
+    mlir::Value lhs = buildExpr(t->trees().at(0));
+    // mlir::Type rhs = buildExpr(t->trees().at(1));
+    mlir::Type rhs = builder.getIntegerType(8);
+
+    if (lhs.getType().isIndex()) {
+      return builder.create<mlir::IndexCastOp>(location, lhs, rhs);
+    }
+
+    return builder.create<mlir::TruncateIOp>(location, lhs, rhs);
+  }
+
   // Builds an MLIR store operation writing the value `valueToStore`
   // to the tensor corresponds to `ident` indexed using the symbols
   // corresponding to the identifiers from `indices`.
@@ -543,6 +558,8 @@ public:
       return buildMaxExpr(t);
     case lang::TK_MIN:
       return buildMinExpr(t);
+    case lang::TK_CAST:
+      return buildCastExpr(t);
     default:
       std::stringstream ss;
       ss << "Unknown tree type: '" << (int)t->kind() << "'";
