@@ -494,6 +494,11 @@ public:
     // mlir::Type rhs = buildExpr(t->trees().at(1));
     mlir::Type rhs = builder.getIntegerType(8);
 
+    if (t->trees().at(1)->kind() == lang::TK_INDEX) {
+      return builder.create<mlir::IndexCastOp>(location, lhs,
+                                               builder.getIndexType());
+    }
+
     if (lhs.getType().isIndex()) {
       return builder.create<mlir::IndexCastOp>(location, lhs, rhs);
     }

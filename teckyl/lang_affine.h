@@ -57,6 +57,8 @@ bool isAffine(const lang::TreeRef &e, const std::set<std::string> &syms) {
     return true;
   case lang::TK_ACCESS:
     return false;
+  case lang::TK_CAST:
+    return false;
   case '+':
   case '-': {
     for (const lang::TreeRef &index : e->trees())

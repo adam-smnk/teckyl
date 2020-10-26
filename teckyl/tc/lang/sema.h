@@ -30,7 +30,7 @@ namespace lang {
 // dependency for this trivial functionality, and it allows us to
 // modify the behavior in the future
 struct TypeInfo {
-  enum Code { Int, UInt, Float };
+  enum Code { Int, UInt, Index, Float };
   TypeInfo(Code code_, uint8_t bits_) : code_(code_), bits_(bits_) {}
   TypeInfo(TreeRef scalar_type) {
     switch (scalar_type->kind()) {
@@ -48,6 +48,7 @@ struct TypeInfo {
       TYPE_INFO_OPTION(TK_INT16, Int, 16)
       TYPE_INFO_OPTION(TK_INT32, Int, 32)
       TYPE_INFO_OPTION(TK_INT64, Int, 64)
+      TYPE_INFO_OPTION(TK_INDEX, Index, 0)
       TYPE_INFO_OPTION(TK_FLOAT16, Float, 16)
       TYPE_INFO_OPTION(TK_FLOAT32, Float, 32)
       TYPE_INFO_OPTION(TK_FLOAT64, Float, 64)

@@ -78,6 +78,7 @@ namespace lang {
   _(TK_INT16, "int16", "int16")                                                \
   _(TK_INT32, "int32", "int32")                                                \
   _(TK_INT64, "int64", "int64")                                                \
+  _(TK_INDEX, "index", "index")                                                \
   _(TK_SIZET, "size_t", "size_t")                                              \
   _(TK_FLOAT16, "float16", "float16")                                          \
   _(TK_FLOAT32, "float32", "float32")                                          \
@@ -342,6 +343,7 @@ struct SharedParserData {
     case TK_INT16:
     case TK_INT32:
     case TK_INT64:
+    case TK_INDEX:
     case TK_SIZET:
     case TK_FLOAT16:
     case TK_FLOAT32:
