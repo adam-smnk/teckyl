@@ -123,6 +123,7 @@ bool hasNonAffineIndexing(const lang::TreeRef &e,
   }
   case lang::TK_MAX:
   case lang::TK_MIN:
+    return true;
   case '+':
   case '-':
   case '*':
